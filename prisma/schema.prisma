@@ -1,0 +1,310 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "sqlserver"
+}
+
+model AsientosContables {
+  AsientoId                 Int                         @id(map: "PK_AsientosContables") @default(autoincrement())
+  UsuarioId                 Int
+  Fecha                     DateTime                    @db.Date
+  Concepto                  String                      @db.VarChar(255)
+  TipoOrigen                String?                     @db.VarChar(255)
+  Estado                    Boolean
+  TotalDebe                 Decimal                     @db.Decimal(18, 2)
+  TotalHaber                Decimal                     @db.Decimal(18, 2)
+  Usuarios                  Usuarios                    @relation(fields: [UsuarioId], references: [UsuarioId], onUpdate: NoAction, map: "FK_AsientosContables_Usuarios")
+  DetallesAsientosContables DetallesAsientosContables[]
+}
+
+model CatalogoCuentas {
+  CuentaId                  Int                         @id(map: "PK_CatalogoCuentas") @default(autoincrement())
+  CodigoCuenta              String                      @unique(map: "UQ_CatalogoCuentas_Codigo") @db.VarChar(50)
+  NombreCuenta              String                      @db.VarChar(150)
+  TipoCuenta                String                      @db.VarChar(50)
+  CuentaPadreId             Int?
+  NivelCuenta               Int
+  PermiteMovimiento         Boolean
+  Estado                    Boolean
+  CatalogoCuentas           CatalogoCuentas?            @relation("CatalogoCuentasToCatalogoCuentas", fields: [CuentaPadreId], references: [CuentaId], onDelete: NoAction, onUpdate: NoAction, map: "FK_CatalogoCuentas_CuentaPadre")
+  other_CatalogoCuentas     CatalogoCuentas[]           @relation("CatalogoCuentasToCatalogoCuentas")
+  DetallesAsientosContables DetallesAsientosContables[]
+}
+
+model CategoriaProductos {
+  CategoriaId     Int         @id(map: "PK_CategoriaProductos") @default(autoincrement())
+  NombreCategoria String      @db.VarChar(255)
+  Productos       Productos[]
+}
+
+model Clientes {
+  ClienteId        Int        @id(map: "PK_Clientes") @default(autoincrement())
+  NombreCliente    String     @db.VarChar(255)
+  ApellidoCliente  String     @db.VarChar(255)
+  DireccionCliente String     @db.VarChar(255)
+  TelefonoCliente  String     @db.VarChar(255)
+  CorreoCliente    String     @db.VarChar(255)
+  FechaRegistroCl  DateTime   @db.DateTime
+  NombreEmpresa    String?    @db.VarChar(255)
+  RUC              String?    @db.VarChar(255)
+  Activo           Boolean?
+  Cobros           Cobros[]
+  Facturas         Facturas[]
+  Pedidos          Pedidos[]
+}
+
+model Cobros {
+  CobroId       Int            @id(map: "PK_Cobros") @default(autoincrement())
+  ClienteId     Int
+  UsuarioId     Int?
+  FechaCobro    DateTime       @db.Date
+  MetodoPago    String         @db.VarChar(50)
+  Referencia    String?        @db.VarChar(100)
+  Observaciones String?        @db.VarChar(500)
+  Estado        String         @db.VarChar(30)
+  Clientes      Clientes       @relation(fields: [ClienteId], references: [ClienteId], onUpdate: NoAction, map: "FK_Cobros_Clientes")
+  Usuarios      Usuarios?      @relation(fields: [UsuarioId], references: [UsuarioId], onDelete: NoAction, onUpdate: NoAction, map: "FK_Cobros_Usuarios")
+  DetalleCobro  DetalleCobro[]
+}
+
+model Compras {
+  CompraId             Int                    @id(map: "PK_Compras") @default(autoincrement())
+  ProveedorId          Int
+  UsuarioId            Int?
+  Fecha                DateTime               @db.Date
+  Estado               String                 @db.VarChar(30)
+  Proveedores          Proveedores            @relation(fields: [ProveedorId], references: [ProveedorId], onUpdate: NoAction, map: "FK_Compras_Proveedores")
+  Usuarios             Usuarios?              @relation(fields: [UsuarioId], references: [UsuarioId], onDelete: NoAction, onUpdate: NoAction, map: "FK_Compras_Usuarios")
+  DetalleCompra        DetalleCompra[]
+  DetallePagoProveedor DetallePagoProveedor[]
+}
+
+model DetalleCobro {
+  DetalleCobroId Int      @id(map: "PK_DetalleCobro") @default(autoincrement())
+  CobroId        Int
+  FacturaId      Int
+  MontoAplicado  Decimal  @db.Decimal(18, 2)
+  Cobros         Cobros   @relation(fields: [CobroId], references: [CobroId], onUpdate: NoAction, map: "FK_DetalleCobro_Cobros")
+  Facturas       Facturas @relation(fields: [FacturaId], references: [FacturaId], onUpdate: NoAction, map: "FK_DetalleCobro_Facturas")
+}
+
+model DetalleCompra {
+  DetalleCompraId Int       @id(map: "PK_DetalleCompra") @default(autoincrement())
+  CompraId        Int
+  ProductoId      Int
+  Cantidad        Int
+  CostoUnitario   Decimal   @db.Decimal(18, 2)
+  Compras         Compras   @relation(fields: [CompraId], references: [CompraId], onUpdate: NoAction, map: "FK_DetalleCompra_Compras")
+  Productos       Productos @relation(fields: [ProductoId], references: [ProductoId], onUpdate: NoAction, map: "FK_DetalleCompra_Productos")
+}
+
+model DetalleFactura {
+  DetalleFacturaId Int       @id(map: "PK_DetalleFactura") @default(autoincrement())
+  FacturaId        Int
+  ProductoId       Int
+  Cantidad         Int
+  PrecioUnitario   Decimal   @db.Decimal(18, 2)
+  Facturas         Facturas  @relation(fields: [FacturaId], references: [FacturaId], onUpdate: NoAction, map: "FK_DetalleFactura_Facturas")
+  Productos        Productos @relation(fields: [ProductoId], references: [ProductoId], onUpdate: NoAction, map: "FK_DetalleFactura_Productos")
+}
+
+model DetalleNomina {
+  DetalleNominaId    Int       @id(map: "PK_DetalleNomina") @default(autoincrement())
+  NominaId           Int
+  EmpleadoId         Int
+  SalarioBase        Decimal   @db.Decimal(18, 2)
+  SalarioQuincenal   Decimal   @db.Decimal(18, 2)
+  HorasExtras        Decimal   @default(0, map: "DF__DetalleNo__Horas__10566F31") @db.Decimal(10, 2)
+  IngresoHorasExtras Decimal   @default(0, map: "DF__DetalleNo__Ingre__114A936A") @db.Decimal(18, 2)
+  TotalIngresos      Decimal   @default(0, map: "DF__DetalleNo__Total__123EB7A3") @db.Decimal(18, 2)
+  INSSLaboral        Decimal   @default(0, map: "DF__DetalleNo__INSSL__1332DBDC") @db.Decimal(18, 2)
+  IR                 Decimal   @default(0, map: "DF__DetalleNomin__IR__14270015") @db.Decimal(18, 2)
+  TotalDeducciones   Decimal   @default(0, map: "DF__DetalleNo__Total__151B244E") @db.Decimal(18, 2)
+  SalarioNeto        Decimal   @default(0, map: "DF__DetalleNo__Salar__160F4887") @db.Decimal(18, 2)
+  INATEC             Decimal   @default(0, map: "DF__DetalleNo__INATE__17036CC0") @db.Decimal(18, 2)
+  INSSPatronal       Decimal   @default(0, map: "DF__DetalleNo__INSSP__17F790F9") @db.Decimal(18, 2)
+  Vacaciones         Decimal   @default(0, map: "DF__DetalleNo__Vacac__18EBB532") @db.Decimal(18, 2)
+  TreceavoMes        Decimal   @default(0, map: "DF__DetalleNo__Trece__19DFD96B") @db.Decimal(18, 2)
+  Indemnizacion      Decimal   @default(0, map: "DF__DetalleNo__Indem__1AD3FDA4") @db.Decimal(18, 2)
+  Empleados          Empleados @relation(fields: [EmpleadoId], references: [EmpleadoId], onUpdate: NoAction, map: "FK_DetalleNomina_Empleados")
+  Nomina             Nomina    @relation(fields: [NominaId], references: [NominaId], onUpdate: NoAction, map: "FK_DetalleNomina_Nomina")
+
+  @@unique([NominaId, EmpleadoId], map: "UQ_DetalleNomina_Empleado")
+}
+
+model DetallePagoProveedor {
+  DetallePagoId    Int              @id(map: "PK_DetallePagoProveedor") @default(autoincrement())
+  PagoId           Int
+  CompraId         Int
+  MontoAplicado    Decimal          @db.Decimal(18, 2)
+  Compras          Compras          @relation(fields: [CompraId], references: [CompraId], onUpdate: NoAction, map: "FK_DetallePagoProveedor_Compras")
+  PagosProveedores PagosProveedores @relation(fields: [PagoId], references: [PagoId], onUpdate: NoAction, map: "FK_DetallePagoProveedor_Pagos")
+}
+
+model DetallePedido {
+  DetallePedidoId Int       @id(map: "PK_DetallePedido") @default(autoincrement())
+  PedidoId        Int
+  ProductoId      Int
+  Cantidad        Int
+  PrecioUnitario  Decimal   @db.Decimal(18, 2)
+  Subtotal        Decimal   @db.Decimal(18, 2)
+  Pedidos         Pedidos   @relation(fields: [PedidoId], references: [PedidoId], onUpdate: NoAction, map: "FK_DetallePedido_Pedidos")
+  Productos       Productos @relation(fields: [ProductoId], references: [ProductoId], onUpdate: NoAction, map: "FK_DetallePedido_Productos")
+}
+
+model DetallesAsientosContables {
+  DetalleId         Int               @id(map: "PK_DetallesAsientosContables") @default(autoincrement())
+  Debe              Decimal           @db.Decimal(18, 2)
+  Haber             Decimal           @db.Decimal(18, 2)
+  AsientoId         Int
+  CuentaId          Int?
+  AsientosContables AsientosContables @relation(fields: [AsientoId], references: [AsientoId], onUpdate: NoAction, map: "FK_DetallesAsientos_Asientos")
+  CatalogoCuentas   CatalogoCuentas?  @relation(fields: [CuentaId], references: [CuentaId], onDelete: NoAction, onUpdate: NoAction, map: "FK_DetallesAsientos_Cuentas")
+}
+
+model Empleados {
+  EmpleadoId    Int             @id(map: "PK_Empleados") @default(autoincrement())
+  PersonaId     Int
+  Cargo         String          @db.VarChar(255)
+  FechaIngreso  DateTime        @db.Date
+  SalarioBase   Decimal         @db.Decimal(18, 2)
+  Estado        Boolean
+  DetalleNomina DetalleNomina[]
+  Personas      Personas        @relation(fields: [PersonaId], references: [PersonaId], onUpdate: NoAction, map: "FK_Empleados_Personas")
+}
+
+model Facturas {
+  FacturaId      Int              @id(map: "PK_Facturas") @default(autoincrement())
+  ClienteId      Int
+  PedidoId       Int
+  UsuarioId      Int?
+  Fecha          DateTime         @db.Date
+  Estado         String           @db.VarChar(30)
+  DetalleCobro   DetalleCobro[]
+  DetalleFactura DetalleFactura[]
+  Clientes       Clientes         @relation(fields: [ClienteId], references: [ClienteId], onUpdate: NoAction, map: "FK_Facturas_Clientes")
+  Pedidos        Pedidos          @relation(fields: [PedidoId], references: [PedidoId], onUpdate: NoAction, map: "FK_Facturas_Pedidos")
+  Usuarios       Usuarios?        @relation(fields: [UsuarioId], references: [UsuarioId], onDelete: NoAction, onUpdate: NoAction, map: "FK_Facturas_Usuarios")
+}
+
+model Nomina {
+  NominaId      Int             @id(map: "PK_Nomina") @default(autoincrement())
+  PeriodoInicio DateTime        @db.Date
+  PeriodoFin    DateTime        @db.Date
+  FechaPago     DateTime        @db.Date
+  Estado        String          @db.VarChar(30)
+  DetalleNomina DetalleNomina[]
+}
+
+model PagosProveedores {
+  PagoId               Int                    @id(map: "PK_PagosProveedores") @default(autoincrement())
+  ProveedorId          Int
+  UsuarioId            Int?
+  FechaPago            DateTime               @db.Date
+  MetodoPago           String                 @db.VarChar(50)
+  Referencia           String?                @db.VarChar(100)
+  Observaciones        String?                @db.VarChar(500)
+  Estado               String                 @db.VarChar(30)
+  DetallePagoProveedor DetallePagoProveedor[]
+  Proveedores          Proveedores            @relation(fields: [ProveedorId], references: [ProveedorId], onUpdate: NoAction, map: "FK_PagosProveedores_Proveedores")
+  Usuarios             Usuarios?              @relation(fields: [UsuarioId], references: [UsuarioId], onDelete: NoAction, onUpdate: NoAction, map: "FK_PagosProveedores_Usuarios")
+}
+
+model Pedidos {
+  PedidoId         Int             @id(map: "PK_Pedidos") @default(autoincrement())
+  ClienteId        Int
+  UsuarioId        Int?
+  FechaPedido      DateTime        @db.DateTime
+  EstadoPedido     String          @db.VarChar(255)
+  DireccionEntrega String          @db.VarChar(255)
+  EstadoEnvio      String          @db.VarChar(255)
+  FechaSalida      DateTime        @db.DateTime
+  FechaEntrega     DateTime        @db.DateTime
+  Observaciones    String          @db.VarChar(500)
+  DetallePedido    DetallePedido[]
+  Facturas         Facturas[]
+  Clientes         Clientes        @relation(fields: [ClienteId], references: [ClienteId], onUpdate: NoAction, map: "FK_Pedidos_Clientes")
+  Usuarios         Usuarios?       @relation(fields: [UsuarioId], references: [UsuarioId], onDelete: NoAction, onUpdate: NoAction, map: "FK_Pedidos_Usuarios")
+}
+
+model Productos {
+  ProductoId         Int                @id(map: "PK_Productos") @default(autoincrement())
+  Codigo             String             @db.VarChar(255)
+  NombreProducto     String             @db.VarChar(255)
+  Descripcion        String?            @db.VarChar(255)
+  PrecioVenta        Decimal            @db.Decimal(18, 2)
+  CostoUnitario      Decimal            @db.Decimal(18, 2)
+  CategoriaId        Int
+  Estado             Boolean
+  DetalleCompra      DetalleCompra[]
+  DetalleFactura     DetalleFactura[]
+  DetallePedido      DetallePedido[]
+  CategoriaProductos CategoriaProductos @relation(fields: [CategoriaId], references: [CategoriaId], onUpdate: NoAction, map: "FK_Productos_Categorias")
+}
+
+model Proveedores {
+  ProveedorId      Int                @id(map: "PK_Proveedores") @default(autoincrement())
+  NombreEmpresa    String             @db.VarChar(255)
+  RUC              String             @db.VarChar(255)
+  Telefono         String             @db.VarChar(255)
+  Correo           String             @db.VarChar(255)
+  Direccion        String?            @db.VarChar(255)
+  Estado           Boolean?
+  Compras          Compras[]
+  PagosProveedores PagosProveedores[]
+}
+
+model Refresh_Tokens {
+  id               Int       @id(map: "PK_Refresh_Tokens") @default(autoincrement())
+  UsuarioId        Int
+  Token_Hash       String    @db.VarChar(255)
+  device_info      String    @db.VarChar(255)
+  expires_at       DateTime  @db.DateTime
+  revoked          Boolean?
+  token_version    String?   @db.VarChar(255)
+  last_activity_at DateTime? @db.DateTime
+  last_extended_at DateTime? @db.DateTime
+  Usuarios         Usuarios  @relation(fields: [UsuarioId], references: [UsuarioId], onUpdate: NoAction, map: "FK_RefreshTokens_Usuarios")
+}
+
+model Roles {
+  RolId       Int        @id(map: "PK_Roles") @default(autoincrement())
+  NombreRol   String     @unique(map: "UQ_Roles_NombreRol") @db.VarChar(100)
+  Descripcion String?    @db.VarChar(255)
+  Estado      Boolean    @default(true, map: "DF__Roles__Estado__38996AB5")
+  Usuarios    Usuarios[]
+}
+
+model Usuarios {
+  UsuarioId         Int                 @id(map: "PK_Usuarios") @default(autoincrement())
+  PersonaId         Int
+  NombreUsuario     String              @db.VarChar(255)
+  CorreoElectronico String              @db.VarChar(255)
+  Contrase_a        String              @map("Contraseña") @db.VarChar(255)
+  RolId             Int
+  Estado            Boolean
+  AsientosContables AsientosContables[]
+  Cobros            Cobros[]
+  Compras           Compras[]
+  Facturas          Facturas[]
+  PagosProveedores  PagosProveedores[]
+  Pedidos           Pedidos[]
+  Refresh_Tokens    Refresh_Tokens[]
+  Personas          Personas            @relation(fields: [PersonaId], references: [PersonaId], onUpdate: NoAction, map: "FK_Usuarios_Personas")
+  Roles             Roles               @relation(fields: [RolId], references: [RolId], onUpdate: NoAction, map: "FK_Usuarios_Roles")
+}
+
+model Personas {
+  PersonaId       Int         @id(map: "PK_Personas") @default(autoincrement())
+  PrimerNombre    String      @db.VarChar(100)
+  SegundoNombre   String?     @db.VarChar(100)
+  PrimerApellido  String      @db.VarChar(100)
+  SegundoApellido String?     @db.VarChar(100)
+  Telefono        String?     @db.VarChar(50)
+  Empleados       Empleados[]
+  Usuarios        Usuarios[]
+}
