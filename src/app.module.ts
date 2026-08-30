@@ -16,8 +16,13 @@ import { PrismaModule } from './prisma/prisma.module';
 import { RolesModule } from './roles/roles.module';
 import { PersonasModule } from './personas/personas.module';
 
+import { ConfigModule, ConfigService } from '@nestjs/config';
+
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     ScheduleModule.forRoot(),
     AuthModule,
     RefreshTokensModule,
@@ -34,4 +39,8 @@ import { PersonasModule } from './personas/personas.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {
+  constructor(
+    private readonly configService: ConfigService,
+  ) {}
+}

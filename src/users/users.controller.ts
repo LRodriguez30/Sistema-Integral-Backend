@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseEnumPipe, ParseIntPipe, ParseUUIDPipe, Patch, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseBoolPipe, ParseEnumPipe, ParseIntPipe, ParseUUIDPipe, Patch, Post, Req, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersResponseDTO } from './dtos/users-response.dto';
 import { plainToInstance } from 'class-transformer';
@@ -10,7 +10,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateSqlServerUsersDTO } from './dtos/create-sqlserver-users.dto';
 import { UpdateSqlServerUsersDTO } from './dtos/update-sqlserver-users.dto';
 
-// @UseGuards(JwtAccessGuard)
+@UseGuards(JwtAccessGuard)
 @Controller('users')
 export class UsersController {
     constructor(
@@ -73,6 +73,7 @@ export class UsersController {
     }
 
 
+    
     // ----------
     // GET      *
     // ----------
@@ -81,31 +82,31 @@ export class UsersController {
     @Get('')
     async getAllUsers(@Req() req) {
         console.log("Información de usuarios solicitada...");
-        const userAccess = req.user.role;
+        // const userAccess = req.user.role;
 
         return plainToInstance(
             UsersResponseDTO,
             await this.usersService.findAll(),
             {
-                groups: [userAccess]
+                groups: [/* userAccess */]
             }
-        )
+        );
     }
 
     // users/:id
     @Get(':id')
     async getUserById(
-        @Param('id', ParseUUIDPipe) userId: string,
+        @Param('id', ParseIntPipe) userId: number,
         @Req() req
     ) {
         console.log("Información de un usuario en particular solicitada...");
-        const userAccess = req.user.role;
+        // const userAccess = req.user.role;
 
         return plainToInstance(
             UsersResponseDTO,
             await this.usersService.findById(userId),
             {
-                groups: [userAccess]
+                groups: [/* userAccess */]
             }
         );
     }
@@ -114,16 +115,17 @@ export class UsersController {
     @Get('email/:email')
     async getUserByEmail(
         @Param('email') email: string,
+        @Param('optional', ParseBoolPipe) optional: boolean,
         @Req() req
     ) {
         console.log("Información de un usuario en particual solicitada...");
-        const userAccess = req.user.role;
+        // const userAccess = req.user.role;
 
         return plainToInstance(
             UsersResponseDTO,
-            await this.usersService.findByEmail(email),
+            await this.usersService.findByEmail(email, optional),
             {
-                groups: [userAccess]
+                groups: [/* userAccess */]
             }
         )
     }
@@ -136,17 +138,18 @@ export class UsersController {
     // users/
     @Post('')
     async createUser(
+        @Param('personaId', ParseIntPipe) personaId: number,
         @Body() dto: CreateUsersDTO,
         @Req() req
     ) {
         console.log("Creando usuario en BD...");
-        const userAccess = req.user.role;
+        // const userAccess = req.user.role;
 
         return plainToInstance(
             UsersResponseDTO,
-            await this.usersService.create(dto),
+            await this.usersService.create(dto, personaId),
             {
-                groups: [userAccess]
+                groups: [/* userAccess */]
             }
         );
     }
@@ -163,13 +166,13 @@ export class UsersController {
         @Req() req
     ) {
         console.log("Actualizando la actividad de un participante de la sesión solicitada...");
-        const userAccess = req.user.role;
+        // const userAccess = req.user.role;
 
         return plainToInstance(
             UsersResponseDTO,
             await this.usersService.grantRole(action),
             {
-                groups: [userAccess]
+                groups: [/* userAccess */]
             }
         )
     }
@@ -180,7 +183,7 @@ export class UsersController {
 
     // users/:id
     @Delete(':id')
-    async deleteUserById(@Param('id', ParseUUIDPipe) userId: string) {
+    async deleteUserById(@Param('id', ParseIntPipe) userId: number) {
         console.log("Eliminando usuario en BD...");
         return await this.usersService.deleteById(userId);
     }

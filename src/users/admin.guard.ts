@@ -7,8 +7,11 @@ export class AdminGuard implements CanActivate {
     const req = context.switchToHttp().getRequest();
 
     // Utilizar identificación para procesar la solicitud
-    if (req.user.role !== UsersRole.Admin && req.user.role !== UsersRole.Dueño) {
-        throw new UnauthorizedException("Access denied. It's required high level permissions to access this route...");
+    if (req.user.role !== UsersRole.SUPERADMINISTRADOR &&
+        req.user.role !== UsersRole.ADMINISTRADORGERENCIAL &&
+        req.user.role !== UsersRole.ADMINISTRADORCONTABLE &&
+        req.user.role !== UsersRole.ADMINISTRADOROPERATIVO) {
+        throw new UnauthorizedException("Acceso denegado. Se requieren permisos superiores para acceder esta ruta...");
     }
 
     return true;

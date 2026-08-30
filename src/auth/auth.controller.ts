@@ -1,37 +1,116 @@
-import { Controller, Post, Body, Res, Req, HttpCode, Get, UnauthorizedException } from '@nestjs/common';
+import { Controller, Post, Body, Res, Req, HttpCode, Get, UnauthorizedException, Query } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDTO } from './dtos/login.dto';
 import { plainToInstance } from 'class-transformer';
 import { UsersResponseDTO } from '../users/dtos/users-response.dto';
 import { RegisterDTO } from './dtos/register.dto';
+import { MicrosoftService } from './microsoft.service';
+import type { Response } from 'express';
+import { MeDTO } from './dtos/me.dto';
 // import { ProfilesResponseDTO } from '../profiles/dtos/profiles-response.dto';
+
+/**
+ * Endpoints para manipular datos de los tokens de recuperación
+ * - GET
+ * ``` typescript
+ *   - getMe()
+ * ```
+ * - POST
+ * ``` typescript
+ *   - register(dto: RegisterDTO)
+ *   - login(dto: LoginDTO)
+ *   - logout()
+ * ```
+ */
 
 // RUTA PRINCIPAL DE AUTENTICACIÓN
 @Controller('auth')
 export class AuthController {
-    constructor(private readonly authService: AuthService) { }
+    constructor(
+        private readonly authService: AuthService,
+        private readonly microsoftService: MicrosoftService
+    ) { }
 
-    // @Get('me')
-    // async getMe(@Req() req) {
-    //     console.log("Inicio de sesión rápido solicitado...");
 
-    //     const token = req.cookies?.accessToken;
+    @Get('microsoft')
+    async microsoftLogin(
+        @Res() response: Response,
+    ) {
+        const url =
+            await this.microsoftService.getAuthorizationUrl();
 
-    //     if (!token) {
-    //         throw new UnauthorizedException('Not authenticated...');
-    //     }
+        return response.redirect(url);
+    }
 
-    //     const { user, profile } = await this.authService.validateAccessToken(token);
+    @Get('microsoft/callback')
+    async microsoftCallback(
+        @Query() query: Record<string, string>,
+        @Req() req,
+        @Res({ passthrough: true }) res: Response,
+    ) {
 
-    //     return {
-    //         user: plainToInstance(UsersResponseDTO, user, {
-    //             groups: [user.role]
-    //         }),
-    //         profile: plainToInstance(ProfilesResponseDTO, profile, {
-    //             groups: [user.role]
-    //         })
-    //     };
-    // }
+        console.log('Microsoft callback query:', query);
+
+        const code = query.code;
+
+        console.log('Authorization code:', code);
+
+        if (!code) {
+            throw new UnauthorizedException(
+                'Microsoft no devolvió un authorization code...',
+            );
+        }
+
+        const result = await this.authService.loginWithMicrosoft(
+            code,
+            {
+                ipAddress: req.ip,
+                userAgent: req.headers['user-agent'],
+            },
+        );
+
+        if (result.requiresRegistration) {
+            return result;
+        }
+
+        this.authService.setAuthCookies(
+            res,
+            result.accessToken,
+            result.refreshToken,
+        );
+
+        return plainToInstance(
+            UsersResponseDTO,
+            result.user,
+        );
+    }
+
+    @Get('me')
+    async getMe(@Req() req) {
+        console.log('Verificando sesión actual...');
+
+        const accessToken = req.cookies?.accessToken;
+
+        if (!accessToken) {
+            throw new UnauthorizedException(
+                'No hay una sesión autenticada...'
+            );
+        }
+
+        const { user, persona } = await this.authService.validateAccessToken(
+            accessToken
+        );
+
+        const me = {
+            persona: persona,
+            user: user
+        } as MeDTO
+
+        return plainToInstance(
+            MeDTO,
+            me
+        );
+    }
 
     @Post('register')
     async register(

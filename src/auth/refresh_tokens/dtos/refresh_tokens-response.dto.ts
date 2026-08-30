@@ -8,8 +8,9 @@ import { UsersRole } from '../../../users/enums/users-role.enum';
  * - Clave secreta del token
  * - Información del dispositivo
  * - Expiración
- * - Fecha de creación (Solo dueño o admins)
  * - Si es válido o inválido
+ * - Última actividad
+ * - Extendido hasta...
  */
 @Exclude()
 export class RefreshTokensResponseDTO {
@@ -28,15 +29,12 @@ export class RefreshTokensResponseDTO {
     @Expose()
     expires_at!: string;
 
-    @Expose({groups: [
-        UsersRole.Dueño,
-        UsersRole.Admin
-    ]})
-    created_at!: string;
-
-    @Expose({groups: [
-        UsersRole.Dueño,
-        UsersRole.Admin
-    ]})
+    @Expose()
     revoked!: boolean;
+    
+    @Expose()
+    last_activity_at!: string | null;
+
+    @Expose()
+    last_extended_at!: string;
 }

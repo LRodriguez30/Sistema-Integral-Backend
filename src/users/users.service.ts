@@ -34,11 +34,11 @@ export class UsersService {
     async sqlServerCreate(dto: CreateSqlServerUsersDTO) {
         return this.prismaService.usuarios.create({
             data: {
-                PersonaId: dto.personaId,
-                NombreUsuario: dto.nombreUsuario,
-                CorreoElectronico: dto.correoElectronico,
+                PersonaId: dto.persona_id,
+                NombreUsuario: dto.nombre_usuario,
+                CorreoElectronico: dto.correo_electronico,
                 Contrase_a: dto.contraseña,
-                RolId: dto.rolId,
+                RolId: dto.rol_id,
                 Estado: dto.estado
             }
         });
@@ -51,12 +51,12 @@ export class UsersService {
     async sqlServerUpdate(dto: UpdateSqlServerUsersDTO, usuarioId: number) {
         const data: any = {};
 
-        if (dto.nombreUsuario !== undefined) {
-            data.NombreUsuario = dto.nombreUsuario;
+        if (dto.nombre_usuario !== undefined) {
+            data.NombreUsuario = dto.nombre_usuario;
         }
 
-        if (dto.rolId !== undefined) {
-            data.RolId = dto.rolId;
+        if (dto.rol_id !== undefined) {
+            data.RolId = dto.rol_id;
         }
 
         if (dto.estado !== undefined) {
@@ -87,109 +87,120 @@ export class UsersService {
 
     async findAll() {
         const { data, error } = await this.supabaseClient
-            .from('users')
+            .schema('core')
+            .from('usuarios')
             .select('*')
 
         if (error) {
-            throw new InternalServerErrorException('Cannot fetch users from DB...')
+            throw new InternalServerErrorException('No se pueden obtener usuarios de la BD...')
         }
         
         return data;
     }
 
-    async findById(userId: string) {
+    async findById(usuarioId: number) {
         const { data, error } = await this.supabaseClient
-            .from('users')
+            .schema('core')
+            .from('usuarios')
             .select('*')
-            .eq('id', userId)
+            .eq('usuario_id', usuarioId)
             .maybeSingle()
         
         if (error) {
-            throw new InternalServerErrorException('Cannot fetch user from DB...')
+            throw new InternalServerErrorException('No se pueden obtener usuarios de la BD...')
         }
 
         if (!data) {
-            throw new NotFoundException(`User with id '${userId}' not found...`);
+            throw new NotFoundException(`Usuario con id '${usuarioId}' no encontrado...`);
         }
 
         return data;
     }
 
-    async findByEmail(email: string) {
+    async findByEmail(correoElectronico: string, optional: boolean) {
         const { data, error } = await this.supabaseClient
-            .from('users')
+            .schema('core')
+            .from('usuarios')
             .select('*')
-            .eq('email', email)
+            .eq('correo_electronico', correoElectronico)
             .maybeSingle()
 
+        if (optional) {
+            return data;
+        }
+        
         if (error) {
-            throw new InternalServerErrorException('Cannot fetch user from DB...');
+            throw new InternalServerErrorException('No se pueden obtener usuarios de la BD...');
         }
 
         if (!data) {
-            throw new NotFoundException(`User with email '${email}' not found...`);
+            throw new NotFoundException(`Usuario con correo electrónico '${correoElectronico}' no encontrado...`);
         }
 
         return data;
     }
 
-    async create(dto: CreateUsersDTO) {
-        const hashedPassword = await bcrypt.hash(dto.password_hash, 10);
+    async create(dto: CreateUsersDTO, persona_id: number) {
+        const contraseñaCifrada = await bcrypt.hash(dto.contraseña, 10);
 
-        if (dto.role === "Dueño" || dto.role === "Admin" || dto.role === "Organizador") {
-            throw new UnauthorizedException("The requested role is not allowed...");
+        if (dto.rol_id === 1) {
+            throw new UnauthorizedException("El rol solicitado no está disponible...");
         }
 
         const { data, error } = await this.supabaseClient
-            .from('users')
+            .schema('core')
+            .from('usuarios')
             .insert({
-                name: dto.name,
-                email: dto.email,
-                password_hash: hashedPassword,
-                role: dto.role
+                persona_id: persona_id,
+                nombre_usuario: dto.nombre_usuario,
+                correo_electronico: dto.correo_electronico,
+                contraseña: contraseñaCifrada,
+                rol_id: dto.rol_id
             })
             .select()
             .single()
         
         if (error) {
             console.log(error)
-            throw new ConflictException(`Email '${dto.email}' already exists...`);
+            throw new ConflictException(`Correo electrónico '${dto.correo_electronico}' ya existe...`);
         }
 
         return data;
     }
 
-    async grantRole(action: GrantRole) {
-        await this.findById(action.id)
+    async grantRole(accion: GrantRole) {
+        await this.findById(accion.id)
 
         const { error } = await this.supabaseClient
-            .from('users')
+            .schema('core')
+            .from('usuarios')
             .update({
-                role: action.role
+                rol_id: accion.rol
             })
-            .eq('id', action.id)
+            .eq('usuario_id', accion.id)
             .single()
         
         if (error) {
-            throw new InternalServerErrorException('Cannot update user from DB...');
+            throw new InternalServerErrorException('No se puede actualizar el usuario en la BD...');
         }
     }
 
-    async deleteById(userId: string) {
-        await this.findById(userId);
+    async deleteById(usuarioId: number) {
+        await this.findById(usuarioId);
 
         const { error } = await this.supabaseClient
-            .from('users')
+            .schema('core')
+            .from('usuarios')
             .delete()
-            .eq('id', userId)
+            .eq('usuario_id', usuarioId)
             .single()
         
         if (error) {
-            throw new InternalServerErrorException('Cannot delete user from DB...');
+            throw new InternalServerErrorException('No se puede borrar el usuario de la BD...');
         }
 
         const message = {
-            "message": "User successfully deleted..."
+            "message": "Usuario eliminado correctamente..."
         }
 
         return message;

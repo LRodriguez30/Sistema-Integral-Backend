@@ -12,3 +12,18 @@ export interface RefreshTokenPayload {
     iat?: number;
     exp?: number;
 }
+
+/**
+ * Metadatos del token:
+ * - ID de usuario (subject)
+ * - Versión del token (tokenVersion)
+ * - Emisor del token (issuer)
+ * - Fecha de creación (issued at)
+ * - Expiración (Expiration)
+ */
+export interface SecRefreshTokenPayload {
+    sub: number;
+    token_version: number;
+    iat?: number;
+    exp?: number;
+}

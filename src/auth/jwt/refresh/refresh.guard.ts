@@ -1,6 +1,11 @@
 import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from '../../auth.service';
 
+/**
+ * Guardia para validar la solicitud de un token de acceso
+ * - Autenticación: 'Bearer token...'
+ * - Seguridad: 'Sin refresh token'
+ */
 @Injectable()
 export class RefreshGuard implements CanActivate {
   constructor(private readonly authService: AuthService) {}

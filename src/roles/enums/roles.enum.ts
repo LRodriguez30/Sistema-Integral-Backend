@@ -3,5 +3,6 @@ export enum RolesType {
     ADMINISTRADORGERENCIAL = "Administrador Gerencial",
     ADMINISTRADORCONTABLE = "Administrador Contable",
     ADMINISTRADOROPERATIVO = "Administrador Operativo",
-    USUARIOESTANDAR = "Usuario Estándar"
+    USUARIOESTANDAR = "Usuario Estándar",
+    INVITADO = "Invitado"
 }

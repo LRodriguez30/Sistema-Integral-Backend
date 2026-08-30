@@ -3,7 +3,11 @@ import { Cron, CronExpression } from "@nestjs/schedule";
 import { RefreshTokensService } from "./refresh_tokens.service";
 import { RealtimeGateway } from "../../realtime/realtime.gateway";
 
-// Servicio cron encargado de eventos en tiempo real
+/**
+ * Servicio cron encargado de eventos en tiempo real:
+ * - Evalúa sesiones activas
+ * - Extiende sesiones por actividad
+ */
 @Injectable()
 export class RefreshTokensCronService {
     // Requiere del módulo de conexión en tiempo real

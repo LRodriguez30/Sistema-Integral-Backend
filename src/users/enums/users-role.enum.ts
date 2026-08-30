@@ -1,6 +1,7 @@
 export enum UsersRole {
-    Dueño = 'Dueño',
-    Admin = 'Admin',
-    Organizador = 'Organizador',
-    Visitante = 'Visitante'
+    SUPERADMINISTRADOR = 1,
+    ADMINISTRADORGERENCIAL = 2,
+    ADMINISTRADORCONTABLE = 3,
+    ADMINISTRADOROPERATIVO = 4,
+    USUARIOESTANDAR = 5
 }

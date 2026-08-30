@@ -1,8 +1,17 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
 import { UsersResponseDTO } from '../../../users/dtos/users-response.dto';
-import { AccessTokenPayload } from './interfaces/payload';
+import { AccessTokenPayload, SecAccessTokenPayload } from './interfaces/payload';
 
+/**
+ * - Firmado con `JWT_SECRET`
+ * ---
+ * Servicios:
+ * ``` typescript
+ * generateAccessToken(dto: UsersResponseDTO): string
+ * verifyAccessToken(token: string): SecAccessTokenPayload
+ * ```
+ */
 @Injectable()
 export class JwtAccessService {
     private readonly JWT_SECRET: string;
@@ -19,23 +28,23 @@ export class JwtAccessService {
 
     // Crea un token de acceso que es válido por 10 minutos
     generateAccessToken(dto: UsersResponseDTO): string {
-        const payload: AccessTokenPayload = {
-            sub: dto.id,
-            role: dto.role
+        const payload: SecAccessTokenPayload = {
+            sub: dto.persona_id,
+            rol_id: dto.rol_id
         };
 
         return jwt.sign(payload, this.JWT_SECRET, {
             expiresIn: '10m',
-            issuer: "UNI Colab Backend"
+            issuer: "Sistema Integral Backend"
         });
     }
 
     // Verifica si el token de acceso corresponde a la firma del servidor
-    verifyAccessToken(token: string): AccessTokenPayload {
+    verifyAccessToken(token: string): SecAccessTokenPayload {
         try {
             return jwt.verify(token, this.JWT_SECRET, {
-                issuer: "UNI Colab Backend",
-            }) as AccessTokenPayload;
+                issuer: "Sistema Integral Backend",
+            }) as SecAccessTokenPayload;
         } catch {
             throw new UnauthorizedException({
                 statusCode: 401,

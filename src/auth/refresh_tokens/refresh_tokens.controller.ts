@@ -1,10 +1,35 @@
-import { Controller, Req, Get, Param, ParseBoolPipe, ParseUUIDPipe, Post, Body, Delete, UseGuards, HttpCode, Patch } from '@nestjs/common';
+import { Controller, Req, Get, Param, ParseBoolPipe, ParseUUIDPipe, Post, Body, Delete, UseGuards, HttpCode, Patch, ParseIntPipe } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { RefreshTokensService } from './refresh_tokens.service';
 import { RefreshTokensResponseDTO } from './dtos/refresh_tokens-response.dto';
 import { CreateRefreshTokensDTO } from './dtos/create-refresh_tokens.dto';
 import { JwtAccessGuard } from '../jwt/access/access.guard';
 import { UpdateRefreshTokensDTO } from './dtos/update-refresh_tokens.dto';
+
+/**
+ * Endpoints para manipular datos de los tokens de recuperación
+ * - GET
+ * ``` typescript
+ *   - getAllRefreshTokens()
+ *   - getRefreshTokenById(refreshTokenId: number)
+ *   - getRefreshTokenByUserId(userId: number)
+ *   - getRefreshTokensIfRevoked(revoked: boolean)
+ * ```
+ * - POST
+ * ``` typescript
+ *   - createRefreshToken(dto: CreateRefreshTokensDTO)
+ *   - checkRefreshToken()
+ * ```
+ * - PATCH
+ * ``` typescript
+ *   - updateRefreshTokenExpirationById(refreshTokenId: number, dto: UpdateRefreshTokensDTO)
+ * ```
+ * - DELETE
+ * ``` typescript
+ *   - deleteRefreshTokenById(refreshTokenId: number)
+ *   - deleteRefreshTokenByUserId(userId: number)
+ * ```
+ */
 
 // RUTA PROTEGIDA por AUTH
 // Necesita de un token de acceso
@@ -157,14 +182,14 @@ export class RefreshTokensController {
 
     // refresh-tokens/:id
     @Delete(':id')
-    async deleteRefreshTokenById(@Param('id', ParseUUIDPipe) refreshTokenId: string) {
+    async deleteRefreshTokenById(@Param('id', ParseIntPipe) refreshTokenId: number) {
         console.log('Eliminando refresh token en BD...');
         return await this.refreshTokensService.deleteById(refreshTokenId);
     }
 
     // refresh-tokens/user/:id
     @Delete('user/:id')
-    async deleteRefreshTokensByUserId(@Param('id', ParseUUIDPipe) userId: string) {
+    async deleteRefreshTokensByUserId(@Param('id', ParseIntPipe) userId: number) {
         console.log('Eliminando refresh tokens de un usuario en particular en BD...');
         return await this.refreshTokensService.deleteByUserId(userId);
     }

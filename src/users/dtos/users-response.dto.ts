@@ -4,47 +4,23 @@ import { UsersRole } from "../enums/users-role.enum";
 @Exclude()
 export class UsersResponseDTO {
     @Expose()
-    id!: string;
+    usuario_id!: number;
 
     @Expose()
-    name!: string;
+    persona_id!: number;
 
     @Expose()
-    email!: string;
+    nombre_usuario!: string;
+
+    @Expose()
+    correo_electronico!: string;
 
     @Exclude()
-    password_hash!: string;
+    contraseña!: string;
 
     @Expose()
-    role!: string;
+    rol_id!: number;
 
-    @Expose({ groups: [
-        UsersRole.Dueño,
-        UsersRole.Admin
-        ]
-    })
-    created_at!: string;
-
-    @Expose({ groups: [
-        UsersRole.Dueño,
-        UsersRole.Admin
-        ]
-    })
-    updated_at!: string;
-
-    @Expose({ groups: [
-        UsersRole.Dueño,
-        UsersRole.Admin,
-        UsersRole.Organizador,
-        UsersRole.Visitante
-        ]
-    })
-    last_login!: string;
-
-    @Expose({ groups: [
-        UsersRole.Dueño,
-        UsersRole.Admin
-        ]
-    })
-    token_version!: number;
+    @Expose()
+    estado!: boolean;
 }

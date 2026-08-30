@@ -1,6 +1,13 @@
 import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { JwtAccessService } from './access.service';
 
+/**
+ * Guardia de acceso para los Endpoints del backend
+ * - Autenticación: 'Bearer token...'
+ * - Seguridad: 'Sin access token 401'
+ * - Token: 'Payload'
+ *   - emisor: Sistema Integral Backend
+ */
 @Injectable()
 export class JwtAccessGuard implements CanActivate {
   constructor(private readonly jwtAccessService: JwtAccessService) {}

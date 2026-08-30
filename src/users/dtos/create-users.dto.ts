@@ -1,18 +1,18 @@
-import { IsEmail, IsEnum, IsString, MinLength } from "class-validator";
+import { IsEmail, IsEnum, IsNumber, IsString, MinLength } from "class-validator";
 import { UsersRole } from "../enums/users-role.enum";
 
 export class CreateUsersDTO {
     @IsString()
     @MinLength(2)
-    name!: string;
+    nombre_usuario!: string;
 
     @IsEmail()
-    email!: string;
+    correo_electronico!: string;
 
     @IsString()
     @MinLength(8)
-    password_hash!: string;
+    contraseña!: string;
 
     @IsEnum(UsersRole)
-    role!: UsersRole;
+    rol_id!: UsersRole;
 }

@@ -3,6 +3,11 @@ import { JwtAccessService } from '../access/access.service';
 import { AuthService } from '../../auth.service';
 import { RefreshGuard } from './refresh.guard';
 
+/**
+ * Endpoints para solicitar nuevamente credenciales
+ * - POST
+ *   - refresh // 'Solicitar Access Token'
+ */
 @UseGuards(RefreshGuard)
 @Controller('auth/refresh')
 export class RefreshController {

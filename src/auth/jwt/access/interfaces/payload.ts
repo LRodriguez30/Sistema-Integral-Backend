@@ -12,3 +12,19 @@ export interface AccessTokenPayload {
   iat?: number;
   exp?: number;
 }
+
+
+/**
+ * Metadatos del token:
+ * - ID de usuario (subject)
+ * - Rol de usuario (role)
+ * - Emisor del token (issuer)
+ * - Fecha de creación (issued at)
+ * - Expiración (Expiration)
+ */
+export interface SecAccessTokenPayload {
+  sub: number;
+  rol_id: number;
+  iat?: number;
+  exp?: number;
+}

@@ -7,6 +7,23 @@ import { RefreshTokensModule } from '../../refresh_tokens/refresh_tokens.module'
 import { AuthModule } from '../../auth.module';
 import { RefreshGuard } from './refresh.guard';
 
+/**
+ * - Módulos Importados:
+ *   - AuthModule
+ *   - UsersModule
+ *   - JwtAccessModule
+ *   - RefreshTokensModule
+ * ---
+ * - Controladores:
+ *   - RefreshController
+ * ---
+ * - Proveedores:
+ *   - RefreshService
+ *   - RefreshGuard
+ * ---
+ * - Expuestos:
+ *   - RefreshService
+ */
 @Module({
   imports: [
     forwardRef(() => AuthModule),

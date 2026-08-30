@@ -3,21 +3,21 @@ import { UsersRole } from "../enums/users-role.enum";
 
 export class CreateSqlServerUsersDTO {
     @IsNumber()
-    personaId!: number;
+    persona_id!: number;
 
     @IsString()
     @MinLength(2)
-    nombreUsuario!: string;
+    nombre_usuario!: string;
 
     @IsEmail()
-    correoElectronico!: string;
+    correo_electronico!: string;
 
     @IsString()
     @MinLength(8)
     contraseña!: string;
 
     @IsNumber()
-    rolId!: number;
+    rol_id!: number;
 
     @IsBoolean()
     estado!: boolean;

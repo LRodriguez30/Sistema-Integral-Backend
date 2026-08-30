@@ -7,6 +7,22 @@ import { JwtAccessModule } from '../jwt/access/access.module';
 import { RealtimeModule } from '../../realtime/realtime.module';
 import { RefreshTokensCronService } from './refresh_tokens_cron.service';
 
+/**
+ * - Módulos Importados:
+ *   - RealtimeModule
+ *   - SupabaseModule
+ *   - UsersModule
+ *   - JwtAccessModule
+ * ---
+ * - Controladores:
+ *   - RefreshTokensController
+ * ---
+ * - Proveedores:
+ *   - RefreshTokensService
+ * ---
+ * - Expuestos:
+ *   - RefreshTokensService
+ */
 @Module({
   imports: [
     forwardRef(() => RealtimeModule),

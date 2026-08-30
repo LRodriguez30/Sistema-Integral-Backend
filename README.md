@@ -1,98 +1,269 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# PASOS — Sistema Integral
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Backend del Sistema Integral **PASOS**, una plataforma orientada a la gestión de diferentes áreas de una empresa desde un mismo sistema.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+El proyecto está desarrollado con **NestJS**, **TypeScript** y **Supabase**, y utiliza una arquitectura modular para separar las funcionalidades de cada área.
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## ¿Qué es PASOS?
 
-## Project setup
+PASOS busca integrar diferentes procesos de una empresa en una sola plataforma.
 
-```bash
-$ npm install
+La idea es que cada área tenga su propio módulo, pero que estos puedan comunicarse entre sí cuando sea necesario.
+
+Actualmente el proyecto cuenta principalmente con **Contalab**, mientras que **OrgLab** y otros módulos se encuentran en desarrollo o planificación.
+
+```text
+PASOS
+│
+├── Contalab
+│   └── Contabilidad y finanzas
+│
+├── OrgLab
+│   └── Gestión organizacional
+│
+├── Producción
+│   └── Procesos productivos
+│
+├── Pedidos
+│   └── Gestión de pedidos
+│
+└── Mercado
+    └── Gestión comercial
 ```
 
-## Compile and run the project
+---
 
-```bash
-# development
-$ npm run start
+## Módulos
 
-# watch mode
-$ npm run start:dev
+| Módulo         | Descripción                                          | Estado        |
+| -------------- | ---------------------------------------------------- | ------------- |
+| **Contalab**   | Contabilidad, finanzas y operaciones administrativas | En desarrollo |
+| **OrgLab**     | Estructura y organización empresarial                | Diseño        |
+| **Producción** | Gestión de procesos productivos                      | Planificado   |
+| **Pedidos**    | Gestión de pedidos y operaciones comerciales         | Planificado   |
+| **Mercado**    | Gestión de actividades comerciales                   | Planificado   |
 
-# production mode
-$ npm run start:prod
+---
+
+## Contalab
+
+**Contalab** es actualmente el módulo con mayor avance dentro de PASOS.
+
+Está orientado a la gestión administrativa, contable y financiera de la empresa.
+
+Entre las funcionalidades contempladas se encuentran:
+
+* Gestión de usuarios y roles.
+* Gestión de personas.
+* Catálogo de cuentas.
+* Asientos contables.
+* Clientes y proveedores.
+* Productos y categorías.
+* Pedidos.
+* Facturación.
+* Cobros.
+* Compras.
+* Pagos a proveedores.
+* Empleados.
+* Nómina.
+* Gestión de sesiones mediante refresh tokens.
+
+### Estructura general
+
+```text
+Contalab
+│
+├── Usuarios
+│   ├── Roles
+│   ├── Personas
+│   └── Refresh Tokens
+│
+├── Contabilidad
+│   ├── Catálogo de cuentas
+│   ├── Asientos contables
+│   └── Detalles de asientos
+│
+├── Ventas
+│   ├── Clientes
+│   ├── Pedidos
+│   ├── Facturas
+│   └── Cobros
+│
+├── Compras
+│   ├── Proveedores
+│   ├── Compras
+│   └── Pagos
+│
+├── Productos
+│   └── Categorías
+│
+└── Nómina
+    ├── Empleados
+    └── Nóminas
 ```
 
-## Run tests
+---
 
-```bash
-# unit tests
-$ npm run test
+## OrgLab
 
-# e2e tests
-$ npm run test:e2e
+**OrgLab** será el módulo encargado de la gestión organizacional.
 
-# test coverage
-$ npm run test:cov
+La idea es representar la estructura de una empresa y las relaciones entre sus diferentes componentes.
+
+Entre las entidades propuestas se encuentran:
+
+* Organizaciones.
+* Sedes.
+* Unidades organizativas.
+* Cargos.
+* Personas.
+* Asignaciones organizativas.
+* Relaciones jerárquicas.
+* Procesos.
+* Etapas de procesos.
+
+Por ejemplo:
+
+```text
+Organización
+│
+├── Gerencia General
+│
+├── Finanzas
+│   ├── Contabilidad
+│   └── Tesorería
+│
+├── Tecnología
+│   ├── Desarrollo
+│   └── Soporte
+│
+└── Operaciones
+    ├── Producción
+    └── Logística
 ```
 
-## Deployment
+Uno de los objetivos del módulo es poder representar la estructura organizacional y generar posteriormente información como organigramas y relaciones jerárquicas.
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+---
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## Arquitectura
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+El backend está construido utilizando una arquitectura modular de NestJS.
+
+```text
+Angular
+   │
+   │ HTTP
+   ▼
+NestJS
+   │
+   ├── Auth
+   │
+   ├── Contalab
+   │
+   ├── OrgLab
+   │
+   └── Otros módulos
+   │
+   ▼
+Supabase
+   │
+   └── PostgreSQL
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Cada módulo mantiene sus propias responsabilidades para evitar que toda la lógica del sistema termine concentrada en una sola parte del backend.
 
-## Resources
+---
 
-Check out a few resources that may come in handy when working with NestJS:
+## Base de datos
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+La base de datos utiliza **PostgreSQL mediante Supabase**.
 
-## Support
+La estructura está siendo organizada mediante schemas para separar los módulos.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```text
+Supabase
+│
+├── public
+│   └── Estructura actual del sistema integral
+│
+├── orglab
+│   └── Estructura organizacional
+│
+├── contalab
+    └── Estructura contable y financiera
+```
 
-## Stay in touch
+La separación mediante schemas permite mantener organizadas las tablas de cada módulo sin necesidad de utilizar una base de datos independiente para cada uno.
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+> La estructura de schemas todavía se encuentra en proceso de organización y puede cambiar durante el desarrollo.
 
-## License
+---
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+## Tecnologías
+
+### Backend
+
+* [NestJS](https://nestjs.com/)
+* TypeScript
+* Node.js
+
+### Base de datos
+
+* PostgreSQL
+* Supabase
+* Microsoft Auth
+
+### API
+
+* REST
+* JSON
+
+---
+
+## Configuración
+
+Crear un archivo `.env` en la raíz del proyecto:
+
+```env
+SUPABASE_URL=tu_url_de_supabase
+SUPABASE_SERVICE_KEY=tu_service_key
+```
+
+La `SUPABASE_SERVICE_KEY` debe utilizarse únicamente en el backend y nunca debe exponerse en el frontend.
+
+---
+
+## Instalación
+
+Clonar el repositorio e instalar las dependencias:
+
+```bash
+git clone <url-del-repositorio>
+
+cd sistema-integral-backend
+
+npm install
+```
+
+Iniciar el servidor en desarrollo:
+
+```bash
+npm run start:dev
+```
+
+Por defecto, la aplicación utiliza el puerto configurado en el proyecto.
+
+---
+
+## Estado actual
+
+El proyecto se encuentra en desarrollo.
+
+Actualmente **Contalab** cuenta con la mayor parte de la estructura de base de datos y funcionalidades contables, mientras que **OrgLab** se encuentra en etapa de diseño y los módulos de Producción, Pedidos y Mercado forman parte del desarrollo previsto para el sistema integral.
+
+La estructura del sistema puede cambiar conforme se definan nuevos requerimientos y se integren los diferentes módulos.
+
+---

@@ -1,15 +1,15 @@
 import { IsBoolean, IsEmail, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, MinLength } from "class-validator";
-import { UsersRole } from "../enums/users-role.enum";
+import { RolesType } from "../enums/roles.enum";
 
-export class UpdateSqlServerUsersDTO {
+export class UpdateRolesDTO {
+
+    @IsEnum(RolesType)
+    @IsOptional()
+    nombre_rol!: RolesType;
+
     @IsString()
-    @MinLength(2)
     @IsOptional()
-    nombre_usuario!: string;
-
-    @IsNumber()
-    @IsOptional()
-    rol_id!: number;
+    descripcion!: string;
 
     @IsBoolean()
     @IsOptional()

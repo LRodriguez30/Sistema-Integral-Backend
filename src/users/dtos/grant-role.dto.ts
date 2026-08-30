@@ -1,10 +1,10 @@
-import { IsEnum, IsUUID } from "class-validator";
+import { IsEnum, IsNumber, IsUUID } from "class-validator";
 import { UsersRole } from "../enums/users-role.enum";
 
 export class GrantRole {
-    @IsUUID()
-    id!: string;
+    @IsNumber()
+    id!: number;
 
     @IsEnum(UsersRole)
-    role!: UsersRole;
+    rol!: UsersRole;
 }

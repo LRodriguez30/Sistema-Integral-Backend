@@ -1,5 +1,5 @@
 {
-  "name": "contalab_backend",
+  "name": "sistema_integral_backend",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
+    "@nestjs/config": "^4.0.4",
     "@nestjs/core": "^11.0.1",
     "@nestjs/mongoose": "^11.0.4",
     "@nestjs/platform-express": "^11.0.1",

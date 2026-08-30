@@ -1,8 +1,17 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
 import { UsersResponseDTO } from '../../../users/dtos/users-response.dto';
-import { RefreshTokenPayload } from './interfaces/payload';
+import { RefreshTokenPayload, SecRefreshTokenPayload } from './interfaces/payload';
 
+/**
+ * - Firmado con `REFRESH_SECRET`
+ * ---
+ * Servicios:
+ * ``` typescript
+ * generateRefreshToken(dto: UsersResponseDTO): SecRefreshTokenPayload
+ * verifyRefreshToken(token: string): SecRefreshTokenPayload
+ * ```
+ */
 @Injectable()
 export class RefreshService {
     private readonly REFRESH_SECRET: string;
@@ -18,9 +27,9 @@ export class RefreshService {
 
     // Crear un token de recuperación que es válido por 7 días
     generateRefreshToken(dto: UsersResponseDTO) {
-        const payload: RefreshTokenPayload = {
-            sub: dto.id,
-            tokenVersion: dto.token_version
+        const payload: SecRefreshTokenPayload = {
+            sub: dto.persona_id,
+            token_version: 1
         };
 
         return jwt.sign(payload, this.REFRESH_SECRET, {
@@ -30,11 +39,11 @@ export class RefreshService {
     }
         
     // Verifica si el token de recuperación corresponde a la firma del servidor
-    verifyRefreshToken(token: string): RefreshTokenPayload {
+    verifyRefreshToken(token: string): SecRefreshTokenPayload {
         try {
             return jwt.verify(token, this.REFRESH_SECRET, {
                 issuer: "UNI Colab Backend"
-            }) as RefreshTokenPayload;
+            }) as SecRefreshTokenPayload;
         } catch {
             throw new UnauthorizedException({
                 statusCode: 401,
