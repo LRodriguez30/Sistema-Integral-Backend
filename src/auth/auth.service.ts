@@ -317,7 +317,7 @@ export class AuthService {
 
         const userInDB = await this.usersService.findById(payload.sub);
 
-        if (payload.token_version !== undefined && refreshTokenInDB.token_version !== payload.token_version) {
+        if (payload.token_version.toString() !== undefined && refreshTokenInDB.token_version.toString() !== payload.token_version.toString()) {
             throw new UnauthorizedException({
                 message: 'Invalid refresh token version...',
                 errorCode: 401005
