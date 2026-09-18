@@ -17,6 +17,7 @@ import { RolesModule } from './roles/roles.module';
 import { PersonasModule } from './personas/personas.module';
 
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { CatalogoCuentasModule } from './contalab/catalogo_cuentas/catalogo_cuentas.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     PrismaModule,
     RolesModule,
     PersonasModule,
+    CatalogoCuentasModule,
   ],
   controllers: [AppController],
   providers: [AppService],
