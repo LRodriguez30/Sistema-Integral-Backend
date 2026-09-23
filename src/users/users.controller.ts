@@ -9,6 +9,8 @@ import { GrantRole } from './dtos/grant-role.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateSqlServerUsersDTO } from './dtos/create-sqlserver-users.dto';
 import { UpdateSqlServerUsersDTO } from './dtos/update-sqlserver-users.dto';
+import { CreateFullUserDTO } from './dtos/create-full-user.dto';
+import { FullUserResponseDTO } from './dtos/full-users.response.dto';
 
 @UseGuards(JwtAccessGuard)
 @Controller('users')
@@ -138,7 +140,6 @@ export class UsersController {
     // users/
     @Post('')
     async createUser(
-        @Param('personaId', ParseIntPipe) personaId: number,
         @Body() dto: CreateUsersDTO,
         @Req() req
     ) {
@@ -147,7 +148,25 @@ export class UsersController {
 
         return plainToInstance(
             UsersResponseDTO,
-            await this.usersService.create(dto, personaId),
+            await this.usersService.create(dto),
+            {
+                groups: [/* userAccess */]
+            }
+        );
+    }
+
+    // users/full-user
+    @Post('full-user')
+    async createFullUser(
+        @Body() dto: CreateFullUserDTO,
+        @Req() req
+    ) {
+        console.log("Creando usuario y persona en BD...");
+        // const userAccess = req.user.role;
+
+        return plainToInstance(
+            FullUserResponseDTO,
+            await this.usersService.createFullUser(dto),
             {
                 groups: [/* userAccess */]
             }

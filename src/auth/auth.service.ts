@@ -233,7 +233,7 @@ export class AuthService {
         requestInfo: { ipAddress: string; userAgent: string }
     ) {
         const persona = await this.personasService.create(dto.persona);
-        const user = await this.usersService.create(dto.user, persona.persona_id);
+        const user = await this.usersService.create(dto.user);
 
         const accessToken = this.jwtAccessService.generateAccessToken(user);
         const refreshTokenHash = this.jwtRefreshService.generateRefreshToken(user);

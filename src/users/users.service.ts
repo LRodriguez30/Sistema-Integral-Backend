@@ -8,6 +8,8 @@ import { GrantRole } from './dtos/grant-role.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateSqlServerUsersDTO } from './dtos/create-sqlserver-users.dto';
 import { UpdateSqlServerUsersDTO } from './dtos/update-sqlserver-users.dto';
+import { PersonasService } from '../personas/personas.service';
+import { CreateFullUserDTO } from './dtos/create-full-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -15,7 +17,8 @@ export class UsersService {
 
     constructor(
         private readonly supabaseService: SupabaseService,
-        private readonly prismaService: PrismaService
+        private readonly prismaService: PrismaService,
+        private readonly personasService: PersonasService,
     ) {
         this.supabaseClient = this.supabaseService.getClient();
     }
@@ -140,7 +143,7 @@ export class UsersService {
         return data;
     }
 
-    async create(dto: CreateUsersDTO, persona_id: number) {
+    async create(dto: CreateUsersDTO) {
         const contraseñaCifrada = await bcrypt.hash(dto.contraseña, 10);
 
         if (dto.rol_id === 1) {
@@ -151,11 +154,12 @@ export class UsersService {
             .schema('core')
             .from('usuarios')
             .insert({
-                persona_id: persona_id,
+                persona_id: dto.persona_id,
                 nombre_usuario: dto.nombre_usuario,
                 correo_electronico: dto.correo_electronico,
                 contraseña: contraseñaCifrada,
-                rol_id: dto.rol_id
+                rol_id: dto.rol_id,
+                estado: dto.estado
             })
             .select()
             .single()
@@ -166,6 +170,17 @@ export class UsersService {
         }
 
         return data;
+    }
+
+    async createFullUser(dto: CreateFullUserDTO) {
+        
+        const persona = await this.personasService.create(dto.persona);
+        const usuario = await this.create(dto.usuario)
+
+        return {
+            persona: persona,
+            usuario: usuario
+        };
     }
 
     async grantRole(accion: GrantRole) {

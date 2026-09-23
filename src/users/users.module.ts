@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { SupabaseModule } from '../supabase/supabase.module';
 import { UsersController } from './users.controller';
@@ -6,9 +6,12 @@ import { JwtAccessModule } from '../auth/jwt/access/access.module';
 import { AdminGuard } from './admin.guard';
 
 import { PrismaModule } from '../prisma/prisma.module';
+import { PersonasModule } from '../personas/personas.module';
 
 @Module({
-  imports: [SupabaseModule, JwtAccessModule, PrismaModule],
+  imports: [
+    forwardRef(() => PersonasModule),
+    SupabaseModule, JwtAccessModule, PrismaModule],
   controllers: [UsersController],
   providers: [UsersService, AdminGuard],
   exports: [UsersService]
