@@ -1,16 +1,20 @@
-import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { ConflictException, forwardRef, Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { SupabaseService } from '../../supabase/supabase.service';
 import { UpsertCuentaDTO } from './dtos/upsert-cuenta.dto';
 
 import { plantillaCuentas } from './data/plantila-cuentas.data';
+import { DetallesAsientosContablesService } from '../detalles_asientos_contables/detalles_asientos_contables.service';
 
 @Injectable()
 export class CatalogoCuentasService {
     private readonly supabaseClient: SupabaseClient;
 
     constructor(
-        private readonly supabaseService: SupabaseService
+        private readonly supabaseService: SupabaseService,
+
+        @Inject(forwardRef(() => DetallesAsientosContablesService))
+        private readonly detallesAsientosContablesService: DetallesAsientosContablesService
     ) {
         this.supabaseClient = this.supabaseService.getClient();
     };
@@ -22,9 +26,28 @@ export class CatalogoCuentasService {
             .select('*')
         
         if (error) {
-            throw new InternalServerErrorException('No se puede obtener el catalogo de cuentas de la BD...')
+            throw new InternalServerErrorException('No se puede obtener el catálogo de cuentas de la BD...')
         }
         
+        return data;
+    }
+
+    async getById(cuentaId: number) {
+        const { data, error } = await this.supabaseClient
+            .schema('contalab')
+            .from('catalogo_cuentas')
+            .select('*')
+            .eq('cuenta_id', cuentaId)
+            .single()
+
+        if (error) {
+            throw new InternalServerErrorException("No se puede obtener la cuenta de la BD...");
+        }
+
+        if (!data) {
+            throw new NotFoundException(`No se encontró una cuenta con id '${cuentaId}' en el catálogo...`)
+        }
+
         return data;
     }
 
@@ -249,6 +272,15 @@ export class CatalogoCuentasService {
     }
 
     async deleteRecords() {
+        const detallesEnBD = await this.detallesAsientosContablesService.getAll();
+
+        if (detallesEnBD.length !== 0) {
+            throw new ConflictException(
+                'No se puede eliminar el catalogo de cuentas porque tiene detalles asociados | ' +
+                'Por integridad, estos registros son históricos y requieren de una eliminación previa para poder ejecutar está acción'
+            );
+        }
+
         const { data, error } = await this.supabaseClient
             .schema('contalab')
             .from('catalogo_cuentas')
@@ -259,6 +291,16 @@ export class CatalogoCuentasService {
             throw new InternalServerErrorException("No se pueden borrar los registros en BD...")
         }
 
+        const { error: rpc_error } = await this.supabaseClient
+            .schema('contalab')
+            .rpc('reset_catalogo_cuentas_sequence');
+
+        if (rpc_error) {
+            throw new InternalServerErrorException(
+                'No se pudo reiniciar la secuencia del catálogo de cuentas.'
+            );
+        }
+
         const message = {
             "message": "Registros eliminados correctamente..."
         }
@@ -267,6 +309,15 @@ export class CatalogoCuentasService {
     }
 
     async deleteCuentaById(cuenta_id: number) {
+        const detalleEnBD = await this.detallesAsientosContablesService.getByCuentaId(cuenta_id);
+
+        if (detalleEnBD) {
+            throw new ConflictException(
+                'No se puede eliminar la cuenta porque tiene detalles asociados | ' +
+                'Por integridad, estos registros son históricos y requieren de una eliminación previa para poder ejecutar esta acción'
+            );
+        }
+    
         // Verificar si tiene cuentas hijas
         const { data: hijos, error: hijosError } =
             await this.supabaseClient
@@ -313,6 +364,7 @@ export class CatalogoCuentasService {
     }
 
     async deleteCuentaRama(cuenta_id: number) {
+        const cuentaEnBD = await this.getById(cuenta_id);
 
         const { error } = await this.supabaseClient
             .schema('contalab')

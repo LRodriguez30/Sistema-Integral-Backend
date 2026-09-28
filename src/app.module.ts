@@ -18,6 +18,8 @@ import { PersonasModule } from './personas/personas.module';
 
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CatalogoCuentasModule } from './contalab/catalogo_cuentas/catalogo_cuentas.module';
+import { AsientosContablesModule } from './contalab/asientos_contables/asientos_contables.module';
+import { DetallesAsientosContablesModule } from './contalab/detalles_asientos_contables/detalles_asientos_contables.module';
 
 @Module({
   imports: [
@@ -37,6 +39,8 @@ import { CatalogoCuentasModule } from './contalab/catalogo_cuentas/catalogo_cuen
     RolesModule,
     PersonasModule,
     CatalogoCuentasModule,
+    AsientosContablesModule,
+    DetallesAsientosContablesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

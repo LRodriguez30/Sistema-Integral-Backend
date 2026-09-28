@@ -19,9 +19,6 @@ export class AsientosContablesResponseDTO {
     tipo_origen!: TipoOrigen;
 
     @Expose()
-    estado!: boolean;
-
-    @Expose()
     total_debe!: number;
 
     @Expose()

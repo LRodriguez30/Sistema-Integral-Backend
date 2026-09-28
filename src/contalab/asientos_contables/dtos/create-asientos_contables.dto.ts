@@ -1,10 +1,12 @@
 import { IsBoolean, IsDate, IsEnum, IsNumber, IsString } from 'class-validator';
 import { TipoOrigen } from '../enums/tipo-origen.enum';
+import { Type } from 'class-transformer';
 
 export class CreateAsientosContablesDTO {
     @IsNumber()
     usuario_id!: number;
 
+    @Type(() => Date)
     @IsDate()
     fecha!: Date;
 
@@ -13,9 +15,6 @@ export class CreateAsientosContablesDTO {
 
     @IsEnum(TipoOrigen)
     tipo_origen!: TipoOrigen;
-
-    @IsBoolean()
-    estado!: boolean;
 
     @IsNumber()    
     total_debe!: number;
