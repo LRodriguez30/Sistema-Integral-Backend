@@ -9,7 +9,6 @@ import { AsientosContablesModule } from '../asientos_contables/asientos_contable
   imports: [
     forwardRef(() => CatalogoCuentasModule),
     forwardRef(() => AsientosContablesModule),
-    forwardRef(() => CatalogoCuentasModule),
     SupabaseModule
   ],
   providers: [DetallesAsientosContablesService],

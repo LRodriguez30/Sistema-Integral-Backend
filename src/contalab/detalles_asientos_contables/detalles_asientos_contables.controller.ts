@@ -18,7 +18,7 @@ export class DetallesAsientosContablesController {
     ) {
         return plainToInstance(
             DetallesAsientosContablesResponseDTO,
-            this.detallesAsientosContablesService.getAll(),
+            await this.detallesAsientosContablesService.getAll(),
             {
                 groups: []
             }
@@ -26,14 +26,14 @@ export class DetallesAsientosContablesController {
     }
 
     // GET BY DETALLE ID
-    @Get('/:detalleId')
+    @Get(':detalleId')
     async ObtenerDetallePorId(
         @Param('detalleId', ParseIntPipe) asientoId: number,
         @Req() req
     ) {
         return plainToInstance(
             DetallesAsientosContablesResponseDTO,
-            this.detallesAsientosContablesService.getById(asientoId),
+            await this.detallesAsientosContablesService.getById(asientoId),
             {
                 groups: []
             }
@@ -41,14 +41,14 @@ export class DetallesAsientosContablesController {
     }
 
     // GET BY ASIENTO ID
-    @Get('/:asientoId')
+    @Get('asiento/:asientoId')
     async ObtenerDetallePorAsientoId(
         @Param('asientoId', ParseIntPipe) asientoId: number,
         @Req() req
     ) {
         return plainToInstance(
             DetallesAsientosContablesResponseDTO,
-            this.detallesAsientosContablesService.getByAsientoId(asientoId),
+            await this.detallesAsientosContablesService.getByAsientoId(asientoId),
             {
                 groups: []
             }
@@ -56,14 +56,14 @@ export class DetallesAsientosContablesController {
     }
 
     // GET BY CUENTA ID
-    @Get('/:cuentaId')
+    @Get('cuenta/:cuentaId')
     async ObtenerDetallePorCuentaId(
         @Param('cuentaId', ParseIntPipe) cuentaId: number,
         @Req() req
     ) {
         return plainToInstance(
             DetallesAsientosContablesResponseDTO,
-            this.detallesAsientosContablesService.getByCuentaId(cuentaId),
+            await this.detallesAsientosContablesService.getByCuentaId(cuentaId),
             {
                 groups: []
             }
@@ -71,14 +71,14 @@ export class DetallesAsientosContablesController {
     }
 
     // CREATE
-    @Post('/')
+    @Post('')
     async CrearAsientoContable(
         @Body() dto: CreateDetallesAsientosContablesDTO,
         @Req() req
     ) {
         return plainToInstance(
             DetallesAsientosContablesResponseDTO,
-            this.detallesAsientosContablesService.create(dto),
+            await this.detallesAsientosContablesService.create(dto),
             {
                 groups: []
             }
@@ -86,7 +86,7 @@ export class DetallesAsientosContablesController {
     }
 
     // UPDATE BY ID
-    @Patch('/:id')
+    @Patch(':id')
     async ActualizarAsientoContable(
         @Param('id', ParseIntPipe) asientoId: number,
         @Body() dto: UpdateDetallesAsientosContablesDTO,
@@ -94,7 +94,7 @@ export class DetallesAsientosContablesController {
     ) {
         return plainToInstance(
             DetallesAsientosContablesResponseDTO,
-            this.detallesAsientosContablesService.update(asientoId, dto),
+            await this.detallesAsientosContablesService.update(asientoId, dto),
             {
                 groups: []
             }
@@ -102,19 +102,19 @@ export class DetallesAsientosContablesController {
     }
 
     // DELETE ALL RECORDS
-    @Delete('/')
+    @Delete('')
     async EliminarRegistros(
         @Req() req
     ) {
-        return this.detallesAsientosContablesService.deleteRecords();
+        return await this.detallesAsientosContablesService.deleteRecords();
     }
 
     // DELETE BY DETALLE ID
-    @Delete('/:detalleId')
+    @Delete(':detalleId')
     async EliminarCuenta(
         @Req() req,
         @Param('detalleId', ParseIntPipe) detalleId: number
     ) {
-        return this.detallesAsientosContablesService.deleteDetalleById(detalleId);
+        return await this.detallesAsientosContablesService.deleteDetalleById(detalleId);
     }
 }

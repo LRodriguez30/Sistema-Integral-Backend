@@ -103,7 +103,7 @@ export class PersonasService {
         return data;
     }
 
-    async findById(personaId: string) {
+    async findById(personaId: number) {
         const { data, error } = await this.supabaseClient
             .schema('core')
             .from('personas')
@@ -144,7 +144,7 @@ export class PersonasService {
         return data;
     }
 
-    async updateById(personaId: string, dto: UpdatePersonasDTO) {
+    async updateById(personaId: number, dto: UpdatePersonasDTO) {
         const { data, error } = await this.supabaseClient
             .schema('core')
             .from('personas')
@@ -164,7 +164,7 @@ export class PersonasService {
         return data;
     }
 
-    async deleteById(personaId: string) {
+    async deleteById(personaId: number) {
         await this.findById(personaId);
 
         const { error } = await this.supabaseClient

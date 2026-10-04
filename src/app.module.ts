@@ -20,6 +20,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CatalogoCuentasModule } from './contalab/catalogo_cuentas/catalogo_cuentas.module';
 import { AsientosContablesModule } from './contalab/asientos_contables/asientos_contables.module';
 import { DetallesAsientosContablesModule } from './contalab/detalles_asientos_contables/detalles_asientos_contables.module';
+import { EmpleadosModule } from './contalab/empleados/empleados.module';
+import { NominaModule } from './contalab/nomina/nomina.module';
+import { DetalleNominaModule } from './contalab/detalle_nomina/detalle_nomina.module';
 
 @Module({
   imports: [
@@ -41,6 +44,9 @@ import { DetallesAsientosContablesModule } from './contalab/detalles_asientos_co
     CatalogoCuentasModule,
     AsientosContablesModule,
     DetallesAsientosContablesModule,
+    EmpleadosModule,
+    NominaModule,
+    DetalleNominaModule
   ],
   controllers: [AppController],
   providers: [AppService],

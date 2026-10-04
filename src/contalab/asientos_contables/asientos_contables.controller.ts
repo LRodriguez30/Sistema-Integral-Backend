@@ -27,14 +27,14 @@ export class AsientosContablesController {
     }
 
     // GET BY ASIENTO ID
-    @Get('/:asientoId')
+    @Get('asiento/:asientoId')
     async ObtenerAsientoContablePorId(
         @Param('asientoId', ParseIntPipe) asientoId: number,
         @Req() req
     ) {
         return plainToInstance(
             AsientosContablesResponseDTO,
-            this.asientosContablesService.getById(asientoId),
+            await this.asientosContablesService.getById(asientoId),
             {
                 groups: []
             }
@@ -42,14 +42,14 @@ export class AsientosContablesController {
     }
 
     // GET BY USER ID
-    @Get('/:userId')
+    @Get('user/:userId')
     async ObtenerAsientoContablePorUsuarioId(
         @Param('userId', ParseIntPipe) userId: number,
         @Req() req
     ) {
         return plainToInstance(
             AsientosContablesResponseDTO,
-            this.asientosContablesService.getByUserId(userId),
+            await this.asientosContablesService.getByUserId(userId),
             {
                 groups: []
             }
@@ -57,14 +57,14 @@ export class AsientosContablesController {
     }
 
     // CREATE
-    @Post('/')
+    @Post('')
     async CrearAsientoContable(
         @Body() dto: CreateAsientosContablesDTO,
         @Req() req
     ) {
         return plainToInstance(
             AsientosContablesResponseDTO,
-            this.asientosContablesService.create(dto),
+            await this.asientosContablesService.create(dto),
             {
                 groups: []
             }
@@ -72,14 +72,14 @@ export class AsientosContablesController {
     }
 
     // CREATE FULL
-    @Post('/full')
+    @Post('full')
     async CrearAsientoContableCompleto(
         @Body() dto: CreateFullAsientosContablesDTO,
         @Req() req
     ) {
         return plainToInstance(
             AsientosContablesResponseDTO,
-            this.asientosContablesService.createFull(dto),
+            await this.asientosContablesService.createFull(dto),
             {
                 groups: []
             }
@@ -87,7 +87,7 @@ export class AsientosContablesController {
     }
 
     // UPDATE BY ID
-    @Patch('/:id')
+    @Patch(':id')
     async ActualizarAsientoContable(
         @Param('id', ParseIntPipe) asientoId: number,
         @Body() dto: UpdateAsientosContablesDTO,
@@ -95,7 +95,7 @@ export class AsientosContablesController {
     ) {
         return plainToInstance(
             AsientosContablesResponseDTO,
-            this.asientosContablesService.update(asientoId, dto),
+            await this.asientosContablesService.update(asientoId, dto),
             {
                 groups: []
             }
@@ -109,7 +109,7 @@ export class AsientosContablesController {
     ) {
         return plainToInstance(
             AsientosContablesResponseDTO,
-            this.asientosContablesService.createBaseLayout()
+            await this.asientosContablesService.createBaseLayout()
         )
     }
 
@@ -120,24 +120,24 @@ export class AsientosContablesController {
     ) {
         return plainToInstance(
             AsientosContablesResponseDTO,
-            this.asientosContablesService.createFullBaseLayout()
+            await this.asientosContablesService.createFullBaseLayout()
         )
     }
 
     // DELETE ALL RECORDS
-    @Delete('/')
+    @Delete('')
     async EliminarRegistros(
         @Req() req
     ) {
-        return this.asientosContablesService.deleteRecords();
+        return await this.asientosContablesService.deleteRecords();
     }
 
     // DELETE BY ASIENTO ID
-    @Delete('/:asientoId')
+    @Delete(':asientoId')
     async EliminarCuenta(
         @Req() req,
         @Param('asientoId', ParseIntPipe) asientoId: number
     ) {
-        return this.asientosContablesService.deleteAsientoById(asientoId);
+        return await this.asientosContablesService.deleteAsientoById(asientoId);
     }
 }

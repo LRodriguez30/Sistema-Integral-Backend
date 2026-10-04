@@ -214,6 +214,14 @@ export class AsientosContablesService {
                 });
 
             if (error) {
+                console.error('ERROR RPC crear_asiento_contable:', {
+                    concepto: plantilla.asiento_contable.concepto,
+                    code: error.code,
+                    message: error.message,
+                    details: error.details,
+                    hint: error.hint,
+                });
+
                 throw new InternalServerErrorException(
                     `No se pudo crear el asiento "${plantilla.asiento_contable.concepto}".`
                 );

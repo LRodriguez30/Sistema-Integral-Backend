@@ -309,7 +309,17 @@ export class CatalogoCuentasService {
     }
 
     async deleteCuentaById(cuenta_id: number) {
-        const detalleEnBD = await this.detallesAsientosContablesService.getByCuentaId(cuenta_id);
+        let detalleEnBD = null;
+
+        try {
+            detalleEnBD =
+                await this.detallesAsientosContablesService.getByCuentaId(cuenta_id);
+        } catch (error) {
+
+            if (!(error instanceof NotFoundException)) {
+                throw error;
+            }
+        }
 
         if (detalleEnBD) {
             throw new ConflictException(
@@ -317,7 +327,7 @@ export class CatalogoCuentasService {
                 'Por integridad, estos registros son históricos y requieren de una eliminación previa para poder ejecutar esta acción'
             );
         }
-    
+            
         // Verificar si tiene cuentas hijas
         const { data: hijos, error: hijosError } =
             await this.supabaseClient

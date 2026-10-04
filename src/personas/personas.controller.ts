@@ -94,7 +94,7 @@ export class PersonasController {
     // personas/:id
     @Get(':id')
     async getPersonaById(
-        @Param('id', ParseUUIDPipe) personaId: string,
+        @Param('id', ParseUUIDPipe) personaId: number,
         @Req() req
     ) {
         console.log("Información de una persona en particular solicitada...");
@@ -140,7 +140,7 @@ export class PersonasController {
     // personas/:id
     @Patch(':id')
     async updatePersonaById(
-        @Param('id', ParseUUIDPipe) id: string,
+        @Param('id', ParseUUIDPipe) id: number,
         @Req() req,
         @Body() dto: UpdatePersonasDTO
     ) {
@@ -163,7 +163,7 @@ export class PersonasController {
 
     // personas/:id
     @Delete(':id')
-    async deletePersonaById(@Param('id', ParseIntPipe) personaId: string) {
+    async deletePersonaById(@Param('id', ParseIntPipe) personaId: number) {
         console.log("Eliminando persona en BD...");
         return await this.personasService.deleteById(personaId);
     }

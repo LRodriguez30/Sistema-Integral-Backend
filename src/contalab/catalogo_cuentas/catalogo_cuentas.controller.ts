@@ -12,29 +12,35 @@ export class CatalogoCuentasController {
     ) {}
 
     // Obtener todo el catálogo de cuentas
-    @Get('/')
+    @Get('')
     async ObtenerCatalogoCuentas(
         @Req() req
     ) {
         return plainToInstance(
             CatalogoCuentasResponseDTO,
-            this.catalogoCuentasService.getAll()
+            await this.catalogoCuentasService.getAll(),
+            {
+                groups: []
+            }
         );
     }
 
     // Crear cuenta
-    @Post('/')
+    @Post('')
     async insertarCuenta(
         @Body() dto: UpsertCuentaDTO
     ) {
         return plainToInstance(
             CatalogoCuentasResponseDTO,
-            await this.catalogoCuentasService.createCuenta(dto)
+            await this.catalogoCuentasService.createCuenta(dto),
+            {
+                groups: []
+            }
         );
     }
 
     // Actualizar cuenta
-    @Put('/:id')
+    @Put(':id')
     async actualizarCuenta(
         @Param('id', ParseIntPipe) cuenta_id: number,
         @Body() dto: UpsertCuentaDTO
@@ -44,42 +50,48 @@ export class CatalogoCuentasController {
             await this.catalogoCuentasService.updateCuenta(
                 dto,
                 cuenta_id
-            )
+            ),
+            {
+                groups: []
+            }
         );
     }
 
-    @Post('/layout')
+    @Post('layout')
     async IniciarPlantillaBase(
         @Req() req
     ) {
         return plainToInstance(
             CatalogoCuentasResponseDTO,
-            this.catalogoCuentasService.createBaseLayout()
+            this.catalogoCuentasService.createBaseLayout(),
+            {
+                groups: []
+            }
         )
     }
 
     // Eliminar los registros del catálogo de cuentas
-    @Delete('/')
+    @Delete('')
     async EliminarRegistros(
         @Req() req
     ) {
-        return this.catalogoCuentasService.deleteRecords();
+        return await this.catalogoCuentasService.deleteRecords();
     }
 
     // Eliminar cuenta
-    @Delete('/:id')
+    @Delete(':id')
     async EliminarCuenta(
         @Req() req,
         @Param('id', ParseIntPipe) id: number
     ) {
-        return this.catalogoCuentasService.deleteCuentaById(id);
+        return await this.catalogoCuentasService.deleteCuentaById(id);
     }
 
     // Eliminar rama
-    @Delete(':id/rama')
-    deleteCuentaRama(
+    @Delete('rama/:id')
+    async deleteCuentaRama(
         @Param('id', ParseIntPipe) id: number
     ) {
-        return this.catalogoCuentasService.deleteCuentaRama(id);
+        return await this.catalogoCuentasService.deleteCuentaRama(id);
     }
 }
