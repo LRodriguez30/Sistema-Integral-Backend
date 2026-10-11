@@ -1,0 +1,6 @@
+export enum EstadosNomina {
+    BORRADOR = "BORRADOR",
+    GENERADA = "GENERADA",
+    CONTABILIZADA = "CONTABILIZADA",
+    ANULADA = "ANULADA"
+}

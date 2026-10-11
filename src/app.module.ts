@@ -23,6 +23,20 @@ import { DetallesAsientosContablesModule } from './contalab/detalles_asientos_co
 import { EmpleadosModule } from './contalab/empleados/empleados.module';
 import { NominaModule } from './contalab/nomina/nomina.module';
 import { DetalleNominaModule } from './contalab/detalle_nomina/detalle_nomina.module';
+import { ClientesModule } from './contalab/clientes/clientes.module';
+import { PedidosModule } from './contalab/pedidos/pedidos.module';
+import { DetallePedidoModule } from './contalab/detalle_pedido/detalle_pedido.module';
+import { CategoriaProductosModule } from './contalab/categoria_productos/categoria_productos.module';
+import { ProductosModule } from './contalab/productos/productos.module';
+import { FacturasModule } from './contalab/facturas/facturas.module';
+import { DetalleFacturaModule } from './contalab/detalle_factura/detalle_factura.module';
+import { CobrosModule } from './contalab/cobros/cobros.module';
+import { DetalleCobroModule } from './contalab/detalle_cobro/detalle_cobro.module';
+import { ProveedoresModule } from './contalab/proveedores/proveedores.module';
+import { PagosProveedoresModule } from './contalab/pagos_proveedores/pagos_proveedores.module';
+import { DetallePagoProveedorModule } from './contalab/detalle_pago_proveedor/detalle_pago_proveedor.module';
+import { ComprasModule } from './contalab/compras/compras.module';
+import { DetalleCompraModule } from './contalab/detalle_compra/detalle_compra.module';
 
 @Module({
   imports: [
@@ -46,7 +60,21 @@ import { DetalleNominaModule } from './contalab/detalle_nomina/detalle_nomina.mo
     DetallesAsientosContablesModule,
     EmpleadosModule,
     NominaModule,
-    DetalleNominaModule
+    DetalleNominaModule,
+    ClientesModule,
+    PedidosModule,
+    DetallePedidoModule,
+    CategoriaProductosModule,
+    ProductosModule,
+    FacturasModule,
+    DetalleFacturaModule,
+    CobrosModule,
+    DetalleCobroModule,
+    ProveedoresModule,
+    PagosProveedoresModule,
+    DetallePagoProveedorModule,
+    ComprasModule,
+    DetalleCompraModule
   ],
   controllers: [AppController],
   providers: [AppService],

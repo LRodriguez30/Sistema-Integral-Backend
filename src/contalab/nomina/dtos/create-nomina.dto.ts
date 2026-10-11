@@ -1,5 +1,6 @@
 import { Type } from "class-transformer";
-import { IsBoolean, IsDate, IsString } from "class-validator";
+import { IsBoolean, IsDate, IsEnum, IsString } from "class-validator";
+import { EstadosNomina } from "../enums/estados-nomina.enum";
 
 export class CreateNominaDTO {
     @Type(() => Date)
@@ -14,6 +15,6 @@ export class CreateNominaDTO {
     @IsDate()
     fecha_pago!: Date;
 
-    @IsString()
-    estado!: string;
+    @IsEnum(EstadosNomina)
+    estado!: EstadosNomina;
 }
